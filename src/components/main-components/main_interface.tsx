@@ -1,18 +1,14 @@
 'use client';
 
-import { ArrowUpDown, FileText, Languages, RotateCw } from 'lucide-react';
+import { ArrowUpDown, FileText, RotateCw } from 'lucide-react';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Progress } from '@/components/ui/progress';
+
+import { LanguageSelector } from './lang_selector';
 
 export function TranslationInterface() {
   const [file, setFile] = useState<File | null>(null);
@@ -89,41 +85,14 @@ export function TranslationInterface() {
       setIsTranslating(false);
     }
   };
-
-  const LanguageSelector = ({
-    value,
-    onSelect,
-  }: {
-    value: string;
-    onSelect: (lang: string) => void;
-  }) => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant='outline' className='w-[180px] justify-start'>
-          <Languages className='mr-2 h-4 w-4' />
-          {value}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {[
-          'Auto Detect',
-          'English',
-          'Spanish',
-          'French',
-          'German',
-          'Chinese',
-        ].map((lang) => (
-          <DropdownMenuItem
-            key={lang}
-            onSelect={() => onSelect(lang)}
-            disabled={lang === 'Auto Detect' && sourceLang !== 'Auto Detect'}
-          >
-            {lang}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+  const clear = () => {
+    setFile(null);
+    setTranslatedContent('');
+    setFileContent('');
+    setProgress(0);
+    setError(null);
+    console.warn('File has been cleared');
+  };
 
   return (
     <Card className='mx-auto max-w-4xl bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
@@ -165,7 +134,11 @@ export function TranslationInterface() {
 
         {/* Language Selection */}
         <div className='flex items-center justify-center gap-4'>
-          <LanguageSelector value={sourceLang} onSelect={setSourceLang} />
+          <LanguageSelector
+            value={sourceLang}
+            onSelect={setSourceLang}
+            sourceLang={sourceLang}
+          />
 
           <Button
             variant='ghost'
@@ -180,7 +153,11 @@ export function TranslationInterface() {
             <ArrowUpDown className='h-4 w-4' />
           </Button>
 
-          <LanguageSelector value={targetLang} onSelect={setTargetLang} />
+          <LanguageSelector
+            value={targetLang}
+            onSelect={setTargetLang}
+            sourceLang={sourceLang}
+          />
         </div>
 
         {/* Progress Indicator */}
@@ -203,7 +180,9 @@ export function TranslationInterface() {
               </CardHeader>
               <CardContent className='max-h-[calc(100%-6rem)] overflow-y-auto text-sm'>
                 <pre className='whitespace-pre-wrap font-sans'>
-                  {fileContent ?? 'File content would appear here'}
+                  {fileContent && fileContent.length > 0
+                    ? fileContent
+                    : 'File content would appear here'}
                   {/* {file?.text() ?? 'File content would appear here'} */}
                 </pre>
               </CardContent>
@@ -217,7 +196,9 @@ export function TranslationInterface() {
               </CardHeader>
               <CardContent className='max-h-[calc(100%-6rem)] flex-1 overflow-y-auto text-sm'>
                 <pre className='whitespace-pre-wrap font-sans'>
-                  {translatedContent ?? 'Translated content will appear here'}
+                  {translatedContent && translatedContent.length > 0
+                    ? translatedContent
+                    : 'Click Translate to see translation'}
                 </pre>
               </CardContent>
             </Card>
@@ -226,15 +207,7 @@ export function TranslationInterface() {
 
         {/* Action Buttons */}
         <div className='flex justify-end gap-2'>
-          <Button
-            variant='outline'
-            onClick={() => {
-              setFile(null);
-              setTranslatedContent('');
-              setProgress(0);
-              setError(null);
-            }}
-          >
+          <Button variant='outline' onClick={clear}>
             Clear
           </Button>
           <Button onClick={handleTranslate} disabled={!file || isTranslating}>
