@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-const LANG_LIST: string[] = [
+export const LANG_LIST: string[] = [
   'Auto Detect',
   'Arabic',
   'English',
@@ -21,12 +21,13 @@ const LANG_LIST: string[] = [
 
 export const LanguageSelector = ({
   value,
-  sourceLang,
   onSelect,
+  isTarget,
 }: {
   value: string;
-  sourceLang: string;
+  sourceLang?: string;
   onSelect: (lang: string) => void;
+  isTarget?: boolean;
 }) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
@@ -40,7 +41,7 @@ export const LanguageSelector = ({
         <DropdownMenuItem
           key={lang}
           onSelect={() => onSelect(lang)}
-          disabled={lang === 'Auto Detect' && sourceLang !== 'Auto Detect'}
+          disabled={lang === 'Auto Detect' && isTarget}
         >
           {lang}
         </DropdownMenuItem>

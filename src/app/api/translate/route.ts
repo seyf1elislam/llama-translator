@@ -1,4 +1,4 @@
-// import pdfParse from 'pdf-parse';
+import pdf from 'pdf-parse';
 import {  createWriteStream } from 'fs';
 import { unlink } from 'fs/promises';
 import mammoth from 'mammoth';
@@ -42,10 +42,10 @@ export async function POST(request: Request) {
         const result = await mammoth.extractRawText({ buffer });
         text = result.value;
         break;
-      // case 'application/pdf':
-      //   const pdfData = await pdfParse(buffer);
-      //   text = pdfData.text;
-      //   break;
+      case 'application/pdf':
+        const pdfData = await pdf(buffer);
+        text = pdfData.text;
+        break;
       default:
         return NextResponse.json(
           { error: 'Unsupported file type' },
@@ -125,3 +125,5 @@ async function writeFile(path: string, data: Buffer): Promise<void> {
     stream.on('error', reject);
   });
 }
+
+

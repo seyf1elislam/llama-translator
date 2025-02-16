@@ -30,22 +30,52 @@ export function TranslationInterface() {
     maxFiles: 1,
     maxSize: 5 * 1024 * 1024, // 5MB
     onDrop: (acceptedFiles) => {
-      setFile(acceptedFiles[0]);
-      setError(null);
       const selectedFile = acceptedFiles[0];
       setFile(selectedFile);
       setError(null);
-      selectedFile
-        .text()
-        .then((content) => {
-          setFileContent(content);
-        })
-        .catch((err) => {
-          console.error('Error reading file content:', err);
-          setFileContent('');
-        });
+      const fileType = selectedFile.type;
+
+      if (fileType === 'application/pdf') {
+        getpdfText(selectedFile);
+      } else {
+        selectedFile
+          .text()
+          .then((content) => {
+            setFileContent(content);
+          })
+          .catch((err) => {
+            console.error('Error reading file content:', err);
+            setFileContent('');
+            setError('Failed to read file content.');
+          });
+      }
     },
   });
+
+  const getpdfText = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('/api/pdf-parse', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      const data = await response.json();
+      setFileContent(data.text);
+    } catch (error) {
+      console.error('Error parsing PDF:', error);
+      setError(
+        error instanceof Error ? error.message : 'Failed to parse PDF document',
+      );
+      setProgress(0);
+    }
+  };
 
   const handleTranslate = async () => {
     if (!file) return;
@@ -134,11 +164,7 @@ export function TranslationInterface() {
 
         {/* Language Selection */}
         <div className='flex items-center justify-center gap-4'>
-          <LanguageSelector
-            value={sourceLang}
-            onSelect={setSourceLang}
-            sourceLang={sourceLang}
-          />
+          <LanguageSelector value={sourceLang} onSelect={setSourceLang} />
 
           <Button
             variant='ghost'
@@ -146,8 +172,36 @@ export function TranslationInterface() {
             className='rounded-full transition-transform hover:rotate-180 hover:bg-accent'
             onClick={() => {
               const currentSource = sourceLang;
-              setSourceLang(targetLang);
-              setTargetLang(currentSource);
+              let newSource: string;
+              let newTarget: string;
+
+              //? Case 1: When both languages are the same.
+              if (currentSource === targetLang) {
+                //? Set source to 'Auto Detect' and leave target unchanged.
+                newSource = 'Auto Detect';
+                newTarget = targetLang;
+              }
+              //? Case 2: When source is 'Auto Detect'.
+              else if (currentSource === 'Auto Detect') {
+                //? Set new source to targetLang.
+                newSource = targetLang;
+                /*
+                  Since target should never be 'Auto Detect' and to prevent both
+                  languages from being equal, choose a fallback for newTarget.
+                  For example, if targetLang is already 'English', we choose 'Spanish'
+                  as a fallback. You can adjust this fallback based on your app's needs.
+                */
+                newTarget = targetLang === 'English' ? 'Arabic' : 'English';
+              }
+              //? Case 3: Standard swap when languages are different and source is not 'Auto Detect'.
+              else {
+                newSource = targetLang;
+                newTarget = currentSource;
+              }
+
+              //? Apply the new language settings.
+              setSourceLang(newSource);
+              setTargetLang(newTarget);
             }}
           >
             <ArrowUpDown className='h-4 w-4' />
@@ -156,7 +210,7 @@ export function TranslationInterface() {
           <LanguageSelector
             value={targetLang}
             onSelect={setTargetLang}
-            sourceLang={sourceLang}
+            isTarget
           />
         </div>
 
@@ -178,13 +232,20 @@ export function TranslationInterface() {
               <CardHeader className='pb-3'>
                 <div className='text-sm text-muted-foreground'>Original</div>
               </CardHeader>
-              <CardContent className='max-h-[calc(100%-6rem)] overflow-y-auto text-sm'>
-                <pre className='whitespace-pre-wrap font-sans'>
+              <CardContent className='flex min-h-[calc(100%-4rem)] overflow-y-auto p-3 text-sm'>
+                {/* <pre className='whitespace-pre-wrap font-sans'>
                   {fileContent && fileContent.length > 0
                     ? fileContent
                     : 'File content would appear here'}
-                  {/* {file?.text() ?? 'File content would appear here'} */}
-                </pre>
+                </pre> */}
+                <textarea
+                  className={`min-h-fit w-full grow resize-none whitespace-pre-wrap rounded-none border-0 bg-transparent p-4 font-mono text-sm leading-normal outline-none focus:border-0 focus:ring-0`}
+                  value={fileContent || 'File content would appear here'}
+                  onChange={(e) => {
+                    setFileContent(e.target.value);
+                  }}
+                  spellCheck={false}
+                />
               </CardContent>
             </Card>
 
@@ -194,7 +255,7 @@ export function TranslationInterface() {
                   Translation ({targetLang})
                 </div>
               </CardHeader>
-              <CardContent className='max-h-[calc(100%-6rem)] flex-1 overflow-y-auto text-sm'>
+              <CardContent className='max-h-[calc(100%-4rem)] flex-1 overflow-y-auto text-sm'>
                 <pre className='whitespace-pre-wrap font-sans'>
                   {translatedContent && translatedContent.length > 0
                     ? translatedContent
