@@ -1,24 +1,38 @@
 'use server';
 
-import pdf from 'pdf-parse';
+import type PdfParse from 'pdf-parse';
+//! this solves the 404 error when importing  pdf from pdf-parse directly
+//@ts-expect-error df-parse does not have declaration
+import pdf from 'pdf-parse/lib/pdf-parse';
 
-/**
- * Server Action to parse a PDF File and return its text content.
- *
- * @param file - The PDF file to parse.
- * @returns The extracted text from the PDF.
- * @throws Will throw an error if no file is provided or if parsing fails.
- */
-export async function parsePdf(file: File): Promise<string> {
+// export async function parsePdf(file: File): Promise<string> {
+export async function parsePdfFileSSA(
+  file: File | Buffer,
+): Promise<PdfParse.Result> {
   if (!file) {
-    throw new Error('No file provided.');
+    // throw new Error('No file provided.');
+    console.error('No file provided.');
+    return {
+      text: '',
+      numpages: 0,
+      numrender: 0,
+      info: {},
+      metadata: {},
+      version: Object.create(null),
+    };
   }
 
   // Convert the File to an ArrayBuffer and then to a Buffer.
-  const arrayBuffer = await file.arrayBuffer();
-  const fileBuffer = Buffer.from(arrayBuffer);
+
+  let fileBuffer: Buffer;
+  if (file instanceof File) {
+    const arrayBuffer = await file.arrayBuffer();
+    fileBuffer = Buffer.from(arrayBuffer);
+  } else {
+    fileBuffer = file;
+  }
 
   // Parse the PDF and extract its text content.
   const data = await pdf(fileBuffer);
-  return data.text;
+  return data;
 }
