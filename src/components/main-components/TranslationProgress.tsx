@@ -6,6 +6,6 @@ export const TranslationProgress = ({ progress }: { progress: number }) => (
       <span>Translating...</span>
       <span>{progress}%</span>
     </div>
-    <Progress value={progress} className='h-2' />
+    <Progress value={progress} className='h-2 rounded-full' />
   </div>
 );
