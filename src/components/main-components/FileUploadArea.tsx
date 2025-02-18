@@ -1,9 +1,10 @@
-import { useFileHandling } from '@/hooks/useFileHandling';
+import { useFileDrophandler } from '@/hooks/useFileHandler';
 import type { TranslationState } from '@/hooks/useTranslationState';
 import { ArrowUpDown } from 'lucide-react';
 
 export const FileUploadArea = ({ state }: { state: TranslationState }) => {
-  const { getRootProps, getInputProps, isDragActive } = useFileHandling(state);
+  const { getRootProps, getInputProps, isDragActive } =
+    useFileDrophandler(state);
 
   return (
     <div

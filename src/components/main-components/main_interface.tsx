@@ -11,12 +11,13 @@ import { ContentPreview } from './ContentPreviewCard';
 import { FileUploadArea } from './FileUploadArea';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { TranslationProgress } from './TranslationProgress';
+import { SettingsSheet } from './settings_sheet';
 
 export function TranslationInterface() {
   const state = useTranslationState();
-  
+
   const { handleTranslate, clearAll } = useTranslationLogic(state);
- // Add error boundary
+  // Add error boundary
   if (!state) {
     return <div>Loading...</div>;
   }
@@ -31,7 +32,7 @@ export function TranslationInterface() {
   } = state;
 
   return (
-    <Card className='mx-auto w-full max-w-4xl border border-red-500 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:w-4/5 lg:w-3/5'>
+    <Card className='mx-auto w-full max-w-4xl  bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:w-4/5 lg:w-3/5'>
       <CardHeader>
         <CardTitle className='flex items-center gap-2'>
           <FileText className='h-6 w-6' />
@@ -46,6 +47,7 @@ export function TranslationInterface() {
           </div>
         )}
 
+        <SettingsSheet state={state} />
         <FileUploadArea state={state} />
         <LanguageSwitcher state={state} />
 

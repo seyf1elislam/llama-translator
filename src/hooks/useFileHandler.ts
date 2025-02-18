@@ -3,9 +3,9 @@ import { useDropzone } from 'react-dropzone';
 
 import type { TranslationState } from './useTranslationState';
 
-export const useFileHandling = (state: TranslationState) => {
+export const useFileDrophandler = (state: TranslationState) => {
   const {
-    setters: { setError, setFileContent, setFile },
+    setters: { setFile, setFileContent, setError },
   } = state;
   return useDropzone({
     accept: {
@@ -23,8 +23,6 @@ export const useFileHandling = (state: TranslationState) => {
 
       try {
         if (selectedFile.type === 'application/pdf') {
-          //   const content = await getPdfText(selectedFile);
-          //   setFileContent(content);
           parsePdfFileSSA(selectedFile).then((res) => {
             setFileContent(res.text);
           });

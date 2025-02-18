@@ -1,21 +1,16 @@
-import Footer from '@/components/footer-component/footer';
-import SiteHeader from '@/components/header-component/site-header';
-// import MainUI from '@/components/main-components/main-ui';
+// import SiteHeader from '@/components/header-component/site-header';
 import { TranslationInterface } from '@/components/main-components/main_interface';
-import { TranslationInterface as TranslationInterface2 } from '@/components/main-components/main_interface-copy';
 
 export default function Home() {
   return (
-    <main>
+    <div>
       {/* <SiteHeader /> */}
-      <div className='flex min-h-screen w-full items-center justify-center bg-primary/30 px-2 py-4'>
+
+      <div className='flex min-h-screen w-full flex-col items-center justify-center bg-primary/30 px-2 py-4 font-mono'>
         <TranslationInterface />
-        {/* 
-        <TranslationInterface2 />
-        
-        */}
       </div>
+
       {/* <Footer /> */}
-    </main>
+    </div>
   );
 }
