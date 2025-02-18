@@ -2,7 +2,7 @@
 
 import { useTheme } from 'next-themes';
 // import { Moon, Sun } from "lucide-react";
-import { GrSystem } from "react-icons/gr";
+import { GrSystem } from 'react-icons/gr';
 // import { GiNightSky } from "react-icons/gi";
 // import { WiDaySunny } from "react-icons/wi";
 import { IoSunny } from 'react-icons/io5';
@@ -41,12 +41,13 @@ export default function ToggleThemeMode({
             {/* {use_custom_button && children} */}
             {use_expaned_variant ? (
               <div className='mx-2 flex items-center p-0'>
-                {show_text ? <span className=''>Select Theme :</span> : null}
+                {show_text ? (
+                  <span className='mr-2'>Select Theme :</span>
+                ) : null}
                 <Button
                   variant='outline'
                   className='flex flex-1 items-center justify-between space-x-1 px-4 py-0'
                 >
-                  {/* <Sun className="flex-2 inline-flex  size-5 scale-100 justify-start  transition-all dark:hidden dark:scale-0"></Sun> */}
                   <IoSunny className='flex-2 inline-flex size-5 scale-100 justify-start transition-all dark:hidden dark:scale-0' />
                   <MdOutlineNightlight className='flex-2 hidden size-5 scale-0 justify-start transition-all dark:inline-flex dark:scale-100' />
                   <span className='inline flex-1 px-3 sm:hidden'>{theme}</span>

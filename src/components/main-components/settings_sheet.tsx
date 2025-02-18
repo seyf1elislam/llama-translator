@@ -80,9 +80,11 @@ export function SettingsSheet({ state }: { state: TranslationState }) {
             </SheetClose>
           </SheetFooter>
         </form>
-        <div className='mt-4'>
-          <ToggleThemeMode />
-        </div>
+        <ToggleThemeMode
+          use_expaned_variant={true}
+          show_text
+          className='mt-4 w-fit'
+        />
       </SheetContent>
     </Sheet>
   );
