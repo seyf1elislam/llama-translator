@@ -1,5 +1,6 @@
 'use client';
 
+import { useOpenaiLogic } from '@/hooks/useOpanaiLogic';
 import { useTranslationLogic } from '@/hooks/useTranslationLogic';
 import { useTranslationState } from '@/hooks/useTranslationState';
 import { FileText, RotateCw } from 'lucide-react';
@@ -15,8 +16,9 @@ import { SettingsSheet } from './settings_sheet';
 
 export function TranslationInterface() {
   const state = useTranslationState();
-
+  
   const { handleTranslate, clearAll } = useTranslationLogic(state);
+  
   // Add error boundary
   if (!state) {
     return <div>Loading...</div>;
@@ -32,7 +34,7 @@ export function TranslationInterface() {
   } = state;
 
   return (
-    <Card className='mx-auto w-full max-w-4xl  bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:w-4/5 lg:w-3/5'>
+    <Card className='mx-auto w-full max-w-4xl bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:w-4/5 lg:w-3/5'>
       <CardHeader>
         <CardTitle className='flex items-center gap-2'>
           <FileText className='h-6 w-6' />
