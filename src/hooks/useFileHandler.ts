@@ -1,12 +1,15 @@
 import { parsePdfFileSSA } from '@/server/parsepdf';
 import { useDropzone } from 'react-dropzone';
 
+import { useTranslationLogic } from './useTranslationLogic';
 import type { TranslationState } from './useTranslationState';
 
 export const useFileDrophandler = (state: TranslationState) => {
   const {
     setters: { setFile, setFileContent, setError },
   } = state;
+  const { clearAll } = useTranslationLogic(state);
+
   return useDropzone({
     accept: {
       'text/plain': ['.txt'],
@@ -17,6 +20,7 @@ export const useFileDrophandler = (state: TranslationState) => {
     maxFiles: 1,
     maxSize: 5 * 1024 * 1024,
     onDrop: async (acceptedFiles) => {
+      clearAll();
       const selectedFile = acceptedFiles[0];
       setFile(selectedFile);
       setError(null);
