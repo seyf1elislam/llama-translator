@@ -1,9 +1,20 @@
 import { translate } from '@/server/translate';
+// import { translateClient } from '@/utils/client_translate';
 
 import type { TranslationState } from './useTranslationState';
 
 export const useTranslationLogic = (state: TranslationState) => {
-  const { file, sourceLang, targetLang, setters } = state;
+  const {
+    file,
+    sourceLang,
+    targetLang,
+    openaiBaseUrl,
+    openaiToken,
+    modelName,
+    temperature,
+    maxSeq,
+    setters,
+  } = state;
   const { setTranslatedContent, setProgress, setIsTranslating, setError } =
     setters;
 
@@ -22,19 +33,19 @@ export const useTranslationLogic = (state: TranslationState) => {
         sourceLang === 'Auto Detect' ? 'auto' : sourceLang,
       );
       formData.append('targetLang', targetLang);
+      formData.append('openaiBaseUrl', openaiBaseUrl);
+      formData.append('openaiToken', openaiToken);
+      formData.append('modelName', modelName);
+      formData.append('targetLang', targetLang);
+      formData.append('temperature', temperature.toString());
+      formData.append('maxSeq', maxSeq.toString());
 
-      // const response = await fetch('/api/translate', {
-      //   method: 'POST',
-      //   body: formData,
-      // });
-
-      // if (!response.ok) throw new Error(await response.text());
-
-      // const data = await response.json();
+      //! SSR
       translate(formData).then((data) => {
         setTranslatedContent(data.translatedText ?? '');
         setProgress(100);
       });
+     
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Translation failed');
       setProgress(0);

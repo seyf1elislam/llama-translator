@@ -36,9 +36,15 @@ export function SettingsSheet({ state }: { state: TranslationState }) {
   const {
     setOpenaiBaseUrl,
     setOpenaiToken,
-   validateAndSave,
+    setModelName,
+    setTemperature,
+    setMaxSeq,
+    validateAndSave,
     openaiBaseUrl,
     openaiToken,
+    modelName,
+    temperature,
+    maxSeq,
   } = useOpenaiLogic(state);
   const [useCustomUrl, setUseCustomUrl] = useState(false);
 
@@ -80,6 +86,57 @@ export function SettingsSheet({ state }: { state: TranslationState }) {
                 className='col-span-3'
               />
             </div>
+
+            {/* Model Name field */}
+            <div className='grid grid-cols-4 items-center gap-4'>
+              <Label htmlFor='model-name' className='text-right'>
+                Model Name
+              </Label>
+              <Input
+                id='model-name'
+                type='text'
+                value={modelName}
+                onChange={(e) => setModelName(e.target.value)}
+                placeholder='gpt-3.5-turbo'
+                className='col-span-3'
+              />
+            </div>
+
+            {/* Temperature field */}
+            <div className='grid grid-cols-4 items-center gap-4'>
+              <Label htmlFor='temperature' className='text-right'>
+                Temperature
+              </Label>
+              <Input
+                id='temperature'
+                type='number'
+                value={temperature}
+                onChange={(e) => setTemperature(parseFloat(e.target.value))}
+                placeholder='0.3'
+                className='col-span-3'
+                step='0.01'
+                min='0'
+                max='1'
+              />
+            </div>
+
+            {/* Max Sequence Length field */}
+            <div className='grid grid-cols-4 items-center gap-4'>
+              <Label htmlFor='max-seq' className='text-right'>
+                Max Sequence
+              </Label>
+              <Input
+                id='max-seq'
+                type='number'
+                value={maxSeq}
+                onChange={(e) => setMaxSeq(parseInt(e.target.value, 10))}
+                placeholder='8126'
+                className='col-span-3'
+                min='1'
+                max='1000000'
+              />
+            </div>
+
             {/* Shadecn Checkbox to choose between providers and custom URL */}
             <div className='grid grid-cols-4 items-center gap-4'>
               <Label htmlFor='use-custom-url' className='text-right'>

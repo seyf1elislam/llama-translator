@@ -19,6 +19,11 @@ export const useTranslationState = () => {
   const [openaiBaseUrl, setOpenaiBaseUrl] = useState(
     'https://api.openai.com/v1',
   );
+
+  const [modelName, setModelName] = useState<string>('emini-2.0-pro-exp-02-05');
+  const [temperature, setTemperature] = useState<number>(0.3);
+  const [maxSeq, setMaxSeq] = useState<number>(8126);
+
   return {
     file,
     progress,
@@ -29,6 +34,9 @@ export const useTranslationState = () => {
     isTranslating,
     openaiBaseUrl,
     openaiToken,
+    modelName,
+    temperature,
+    maxSeq,
     error,
     setters: {
       setFile,
@@ -41,6 +49,9 @@ export const useTranslationState = () => {
       setError,
       setOpenaiToken,
       setOpenaiBaseUrl,
+      setModelName,
+      setTemperature,
+      setMaxSeq,
     },
   };
 };
