@@ -1,4 +1,5 @@
 import { parsePdfFileSSA } from '@/server/parsepdf';
+import mammoth from 'mammoth';
 import { useDropzone } from 'react-dropzone';
 
 import { useTranslationLogic } from './useTranslationLogic';
@@ -30,6 +31,14 @@ export const useFileDrophandler = (state: TranslationState) => {
           parsePdfFileSSA(selectedFile).then((res) => {
             setFileContent(res.text);
           });
+        } else if (
+          selectedFile.type ===
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ) {
+          const result = await mammoth.extractRawText({
+            arrayBuffer: await selectedFile.arrayBuffer(),
+          });
+          setFileContent(result.value);
         } else {
           const content = await selectedFile.text();
           setFileContent(content);
