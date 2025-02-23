@@ -15,20 +15,16 @@ import { SettingsSheet } from './settings_sheet';
 
 export function TranslationInterface() {
   const state = useTranslationState();
-  const { handleTranslate, clearAll } = useTranslationLogic(state);
-
-  // Error boundary – show a loader if state is not yet available
-  if (!state) {
-    return <div>Loading...</div>;
-  }
+  const { handleTranslate } = useTranslationLogic(state);
 
   const {
     error,
-    isTranslating,
+    isPending,
     progress,
     fileContent,
     translatedContent,
     targetLang,
+    setters: { clearAll },
   } = state;
 
   return (
@@ -51,7 +47,7 @@ export function TranslationInterface() {
         <FileUploadArea state={state} />
         <LanguageSwitcher state={state} />
 
-        {isTranslating && <TranslationProgress progress={progress} />}
+        {isPending && <TranslationProgress progress={progress} />}
 
         {fileContent && (
           <div className='grid gap-4 md:grid-cols-2'>
@@ -80,10 +76,10 @@ export function TranslationInterface() {
           </Button>
           <Button
             onClick={handleTranslate}
-            disabled={!state.file || isTranslating}
+            disabled={!state.file || isPending}
             className='transition-colors duration-200 hover:bg-primary/90'
           >
-            {isTranslating ? (
+            {isPending ? (
               <RotateCw className='mr-2 h-4 w-4 animate-spin' />
             ) : (
               <RotateCw className='mr-2 h-4 w-4' />

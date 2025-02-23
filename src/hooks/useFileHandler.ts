@@ -7,10 +7,9 @@ import type { TranslationState } from './useTranslationState';
 
 export const useFileDrophandler = (state: TranslationState) => {
   const {
-    setters: { setFile, setFileContent, setError },
+    setters: { setFile, setFileContent, setError,clearAll },
   } = state;
-  const { clearAll } = useTranslationLogic(state);
-
+  
   return useDropzone({
     accept: {
       'text/plain': ['.txt'],

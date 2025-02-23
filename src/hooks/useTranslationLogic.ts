@@ -13,16 +13,15 @@ export const useTranslationLogic = (state: TranslationState) => {
     temperature,
     maxSeq,
     setters,
+    startTransition,
   } = state;
-  const { setTranslatedContent, setProgress, setIsTranslating, setError } =
-    setters;
+  const { setTranslatedContent, setProgress, setError } = setters;
 
   const handleTranslate = async () => {
     if (!file) return;
 
-    setIsTranslating(true);
     setError(null);
-    setProgress(30);
+    setProgress(0);
 
     try {
       const formData = new FormData();
@@ -39,27 +38,22 @@ export const useTranslationLogic = (state: TranslationState) => {
       formData.append('temperature', temperature.toString());
       formData.append('maxSeq', maxSeq.toString());
 
-      //! SSR
+      // //! Call SSR function
       translate(formData).then((data) => {
-        setTranslatedContent(data.translatedText ?? '');
-        setProgress(100);
+        startTransition(() => {
+          setTranslatedContent(data.translatedText ?? '');
+          setProgress(100);
+        });
       });
-     
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Translation failed');
-      setProgress(0);
+      startTransition(() => {
+        setError(err instanceof Error ? err.message : 'Translation failed');
+        setProgress(0);
+      });
     } finally {
-      setIsTranslating(false);
+      // Removed setIsTranslating(false);
     }
   };
 
-  const clearAll = () => {
-    setters.setFile(null);
-    setters.setTranslatedContent('');
-    setters.setFileContent('');
-    setters.setProgress(0);
-    setters.setError(null);
-  };
-
-  return { handleTranslate, clearAll };
+  return { handleTranslate };
 };
