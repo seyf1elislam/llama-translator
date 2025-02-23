@@ -2,7 +2,6 @@ import { parsePdfFileSSA } from '@/server/parsepdf';
 import mammoth from 'mammoth';
 import { useDropzone } from 'react-dropzone';
 
-import { useTranslationLogic } from './useTranslationLogic';
 import type { TranslationState } from './useTranslationState';
 
 export const useFileDrophandler = (state: TranslationState) => {

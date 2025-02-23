@@ -10,7 +10,7 @@ export const FileUploadArea = ({ state }: { state: TranslationState }) => {
       {...getRootProps()}
       className={`rounded-xl border-2 border-dashed p-8 text-center transition-all duration-200 transform hover:scale-105 ${
         isDragActive ? 'border-primary bg-accent/20' : 'border-border hover:shadow-lg'
-      } ${state.isTranslating ? 'pointer-events-none opacity-50' : ''}`}
+      } ${state.isPending ? 'pointer-events-none opacity-50' : ''}`}
     >
       <input {...getInputProps()} />
       <div className="space-y-3">
