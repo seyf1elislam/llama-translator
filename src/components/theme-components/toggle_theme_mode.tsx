@@ -26,7 +26,6 @@ export default function ToggleThemeMode({
   use_expaned_variant = true,
   show_text = false,
   className,
-  children,
 }: ToggleThemeModeProps) {
   const { theme, setTheme } = useTheme();
   const toggleTheme = () => {

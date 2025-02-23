@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import type { TranslationState } from './useTranslationState';
 
@@ -85,7 +85,7 @@ export const useOpenaiLogic = (state: TranslationState) => {
   ]);
 
   // Save handlers with validation
-  const validateAndSave = () => {
+  const validateAndSave = useCallback(() => {
     const errors: string[] = [];
 
     if (!validateUrl(openaiBaseUrl)) {
@@ -120,7 +120,7 @@ export const useOpenaiLogic = (state: TranslationState) => {
     localStorage.setItem(MAX_SEQ_KEY, maxSeq.toString());
     setError(null);
     return true;
-  };
+  }, [openaiBaseUrl, openaiToken, modelName, temperature, maxSeq, setError]);
 
   // Auto-save with debouncing
   useEffect(() => {
@@ -131,7 +131,14 @@ export const useOpenaiLogic = (state: TranslationState) => {
     }, 500);
 
     return () => clearTimeout(timeoutId);
-  }, [openaiBaseUrl, openaiToken, modelName, temperature, maxSeq]);
+  }, [
+    openaiBaseUrl,
+    openaiToken,
+    modelName,
+    temperature,
+    maxSeq,
+    validateAndSave,
+  ]);
 
   return {
     setOpenaiBaseUrl,
