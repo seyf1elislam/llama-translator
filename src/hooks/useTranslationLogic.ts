@@ -1,5 +1,4 @@
 import { translate } from '@/server/translate';
-// import { translateClient } from '@/utils/client_translate';
 
 import type { TranslationState } from './useTranslationState';
 
