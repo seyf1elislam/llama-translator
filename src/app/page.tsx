@@ -1,5 +1,18 @@
 import { TranslationInterface } from '@/components/main-components/main_interface';
 
+import { siteConfig } from '@/config/siteConfig';
+
+export const metadata = {
+  title: siteConfig.name,
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  openGraph: {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    // url: siteConfig.url,
+  },
+};
+
 export default function Home() {
   return (
     <div>
