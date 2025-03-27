@@ -15,7 +15,9 @@ export const useTranslationState = () => {
     'https://api.openai.com/v1',
   );
 
-  const [modelName, setModelName] = useState<string>('emini-2.0-pro-exp-02-05');
+  const [modelName, setModelName] = useState<string>(
+    'gemini-2.0-pro-exp-02-05',
+  );
   const [temperature, setTemperature] = useState<number>(0.3);
   const [maxSeq, setMaxSeq] = useState<number>(8126);
 
