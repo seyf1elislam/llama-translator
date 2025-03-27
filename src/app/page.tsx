@@ -1,24 +1,14 @@
-import { TranslationInterface } from '@/components/main-components/main_interface';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
-import { siteConfig } from '@/config/siteConfig';
-
-export const metadata = {
-  title: siteConfig.name,
-  description: siteConfig.description,
-  keywords: siteConfig.keywords,
-  openGraph: {
-    title: siteConfig.name,
-    description: siteConfig.description,
-    // url: siteConfig.url,
-  },
-};
+import ConditionPlaceholder from './condition-placeholder';
 
 export default function Home() {
   return (
-    <div>
-      <div className='flex min-h-screen w-full flex-col items-center justify-center bg-primary/30 px-2 py-4 font-mono'>
-        <TranslationInterface />
-      </div>
+    <div className='flex min-h-dvh w-full flex-col items-center justify-center bg-gradient-to-br from-background to-secondary/30 px-2 py-4 md:py-8'>
+      {/* Conditionally render the component only on the client */}
+      <TooltipProvider>
+        <ConditionPlaceholder />
+      </TooltipProvider>
     </div>
   );
 }

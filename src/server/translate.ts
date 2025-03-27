@@ -1,16 +1,11 @@
 'use server';
 
-// import { createWriteStream } from 'fs';
-// import { unlink } from 'fs/promises';
 import mammoth from 'mammoth';
 import { OpenAI } from 'openai';
 
-// import { tmpdir } from 'os';
-// import { join } from 'path';
-
 import { parsePdfFileSSA } from './parsepdf';
 
-type OpenAIConftype = {
+type OpenAIConfigType = {
   model: string;
   temperature: number;
   max_tokens: number;
@@ -18,164 +13,184 @@ type OpenAIConftype = {
 
 export async function translate(formData: FormData): Promise<{
   translatedText?: string;
-  fileName?: string;
+  fileName?: string; // Keep filename for potential download naming
   sourceLang?: string;
   targetLang?: string;
   error?: string;
 }> {
-  // const MODEL_NAME = 'gemini-2.0-pro-exp-02-05';
-  // const openai = new OpenAI({
-  //   apiKey: process.env.OPENAI_API_KEY,
-  //   baseURL: process.env.OPENAI_BASE_URL, // Your custom base URL
-  // });
-
   try {
-    const file = formData.get('file') as File;
+    // Prioritize textContent if sent, otherwise fall back to file processing
+    const textContent = formData.get('textContent') as string | null;
+    const file = formData.get('file') as File | null; // File might still be sent for metadata
+
     const sourceLang = formData.get('sourceLang') as string;
     const targetLang = formData.get('targetLang') as string;
     const openaiBaseUrl = formData.get('openaiBaseUrl') as string;
     const openaiToken = formData.get('openaiToken') as string;
     const modelName = formData.get('modelName') as string;
-    const temperature: number =
-      parseFloat(formData.get('temperature') as string) ?? 0.2;
-    const maxSeq: number = parseInt(formData.get('maxSeq') as string) ?? 0.2;
+    const temperature = parseFloat(formData.get('temperature') as string);
+    const maxSeq = parseInt(formData.get('maxSeq') as string, 10);
 
     if (
-      !file ||
+      (!textContent && !file) || // Need either content or a file
       !sourceLang ||
       !targetLang ||
       !openaiBaseUrl ||
       !openaiToken ||
-      !modelName
+      !modelName ||
+      isNaN(temperature) || // Check if parsing succeeded
+      isNaN(maxSeq)
     ) {
-      return { error: 'Missing required fields' };
+      console.error('Missing required fields:', {
+        textContentExists: !!textContent,
+        fileExists: !!file,
+        sourceLang,
+        targetLang,
+        openaiBaseUrl,
+        openaiTokenExists: !!openaiToken,
+        modelName,
+        temperature,
+        maxSeq,
+      });
+      return { error: 'Missing or invalid required fields for translation.' };
     }
-    // ? -- OpenAI client
-    const openaiConfig: OpenAIConftype = {
-      model: modelName ?? 'gemini-2.0-pro-exp-02-05',
-      temperature: temperature ?? 0.3,
-      max_tokens: maxSeq ?? 8126,
+
+    let textToTranslate: string;
+
+    // If textContent is provided, use it directly
+    if (textContent) {
+      textToTranslate = textContent;
+    } else if (file) {
+      // If only file is provided, extract text (fallback)
+      const buffer = Buffer.from(await file.arrayBuffer());
+      switch (file.type) {
+        case 'text/plain':
+          textToTranslate = buffer.toString('utf-8');
+          break;
+        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+          const docxResult = await mammoth.extractRawText({ buffer });
+          textToTranslate = docxResult.value;
+          break;
+        case 'application/pdf':
+          const pdfData = await parsePdfFileSSA(buffer);
+          textToTranslate = pdfData.text;
+          break;
+        default:
+          return { error: 'Unsupported file type' };
+      }
+    } else {
+      // Should not happen due to initial check, but safeguard
+      return { error: 'No content or file provided for translation.' };
+    }
+
+    // OpenAI client setup
+    const openaiConfig: OpenAIConfigType = {
+      model: modelName,
+      temperature: temperature,
+      max_tokens: maxSeq,
     };
 
     const openai = new OpenAI({
       apiKey: openaiToken,
       baseURL: openaiBaseUrl,
-      dangerouslyAllowBrowser: true,
+      dangerouslyAllowBrowser: true, // Acknowledge browser usage risk
     });
 
-    // Save temporary file
-    // const tempPath = join(tmpdir(), file.name);
-    const buffer = Buffer.from(await file.arrayBuffer());
-    // await writeFile(tempPath, buffer);
-
-    // Extract text from file
-    let text: string;
-    switch (file.type) {
-      case 'text/plain':
-        text = buffer.toString();
-        break;
-      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-        const result = await mammoth.extractRawText({ buffer });
-        text = result.value;
-        break;
-      case 'application/pdf':
-        // const pdfData = await pdf(buffer);
-        const pdfData = await parsePdfFileSSA(buffer);
-        text = pdfData.text;
-        break;
-      default:
-        return { error: 'Unsupported file type' };
-    }
-
     // Split text into manageable chunks
-    const chunks = splitTextIntoChunks(text);
+    // Consider a more robust chunking strategy if needed (e.g., sentence boundaries)
+    const chunks = splitTextIntoChunks(textToTranslate);
 
     // Translate each chunk
     let translatedText = '';
-    for (const chunk of chunks) {
-      translatedText +=
-        (await translateText(
-          openai,
-          // MODEL_NAME,
-          chunk,
-          sourceLang,
-          targetLang,
-          openaiConfig,
-        )) + '\n';
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
+      const translatedChunk = await translateText(
+        openai,
+        chunk,
+        sourceLang, // 'auto' is handled here
+        targetLang,
+        openaiConfig,
+      );
+      if (translatedChunk === undefined) {
+        // Handle potential error from translateText if needed
+        console.warn(`Warning: Chunk ${i + 1} translation failed.`);
+        // Optionally append original chunk or placeholder
+        // translatedText += `\n--- ERROR TRANSLATING CHUNK ${i+1} ---\n${chunk}\n`;
+      } else {
+        translatedText += translatedChunk + (i < chunks.length - 1 ? '\n' : ''); // Add newline between chunks
+      }
     }
-
-    // Clean up temp file
-    // await unlink(tempPath);
 
     return {
       translatedText,
-      fileName: file.name,
+      fileName: file?.name, // Pass filename back if file was provided
       sourceLang,
       targetLang,
     };
-  } catch (error) {
-    console.error('Translation error:', error);
-    return { error: 'Failed to process translation' };
-  }
-}
-
-function splitTextIntoChunks(text: string, maxChunkSize = 3000): string[] {
-  const chunks = [];
-  let currentChunk = '';
-
-  const paragraphs = text.split('\n');
-  for (const paragraph of paragraphs) {
-    if (currentChunk.length + paragraph.length > maxChunkSize) {
-      chunks.push(currentChunk);
-      currentChunk = '';
+  } catch (error: any) {
+    console.error('Translation server action error:', error);
+    // Provide more specific error messages if possible
+    let errorMessage = 'Failed to process translation.';
+    if (error.response && error.response.status === 401) {
+      errorMessage = 'Authentication error. Please check your API token.';
+    } else if (error.response && error.response.status === 429) {
+      errorMessage = 'Rate limit exceeded. Please try again later.';
+    } else if (error.message) {
+      errorMessage = error.message;
     }
-    currentChunk += paragraph + '\n';
+    return { error: errorMessage };
   }
-
-  if (currentChunk.length > 0) {
-    chunks.push(currentChunk);
-  }
-
-  return chunks;
 }
 
-// async function writeFile(path: string, data: Buffer): Promise<void> {
-//   return new Promise((resolve, reject) => {
-//     const stream = createWriteStream(path);
-//     stream.write(data);
-//     stream.end();
-//     stream.on('finish', resolve);
-//     stream.on('error', reject);
-//   });
-// }
+// Keep chunking and translateText functions as they are, or refine chunking
+function splitTextIntoChunks(text: string, maxChunkSize = 3000): string[] {
+  // Simple split by length, respecting newlines where possible
+  const chunks: string[] = [];
+  let remainingText = text;
+
+  while (remainingText.length > 0) {
+    if (remainingText.length <= maxChunkSize) {
+      chunks.push(remainingText);
+      break;
+    }
+
+    let chunkEnd = maxChunkSize;
+    // Try to find a newline near the max size to split cleanly
+    const lastNewline = remainingText.lastIndexOf('\n', maxChunkSize);
+    if (lastNewline > maxChunkSize / 2) {
+      // Avoid tiny chunks if newline is too early
+      chunkEnd = lastNewline + 1; // Include the newline in the previous chunk
+    }
+
+    chunks.push(remainingText.substring(0, chunkEnd));
+    remainingText = remainingText.substring(chunkEnd);
+  }
+
+  return chunks.filter((chunk) => chunk.trim().length > 0); // Remove empty chunks
+}
 
 export async function translateText(
   openai: OpenAI,
   text: string,
-  sourceLang: string,
+  sourceLang: string, // 'auto' means auto-detect
   targetLang: string,
-  config: OpenAIConftype,
+  config: OpenAIConfigType,
 ): Promise<string | undefined> {
+  const systemPrompt = `You are a professional, highly accurate translator. Translate the following text${sourceLang !== 'auto' ? ` from ${sourceLang}` : ''} to ${targetLang}. Preserve all original formatting, including line breaks, spacing, markdown, and special characters. Maintain the original tone and style. Respond ONLY with the translated text, without any additional comments, introductions, or explanations.`;
+
   try {
     const completion = await openai.chat.completions.create({
       ...config,
       messages: [
-        {
-          role: 'system',
-          content: `
-You are a professional translator. Translate the following text from ${sourceLang} to ${targetLang}.
- Preserve all formatting, special characters, and technical terms. Respond only with the translation.`,
-        },
-        {
-          role: 'user',
-          content: text,
-        },
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: text },
       ],
     });
 
-    return completion.choices[0].message.content ?? '';
+    return completion.choices[0].message.content?.trim() ?? ''; // Trim potential leading/trailing whitespace from API response
   } catch (error) {
-    console.error('Translation error:', error);
-    return undefined;
+    console.error('OpenAI API error during translation:', error);
+    // Re-throw or handle specific API errors (like 401, 429) if needed upstream
+    throw error; // Propagate the error to be caught in handleTranslate
   }
 }
