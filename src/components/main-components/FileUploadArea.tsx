@@ -22,7 +22,7 @@ export const FileUploadArea = () => {
     maxSize: 10 * 1024 * 1024, // Increased size limit slightly
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
-        setFile(acceptedFiles[0]); // Use Zustand action
+        setFile(acceptedFiles[0]);
       }
     },
     disabled: isReadingFile || isTranslating, // Disable while reading or translating
@@ -54,7 +54,7 @@ export const FileUploadArea = () => {
       {...getRootProps()}
       className={`transform cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-all duration-200 hover:scale-[1.02] hover:shadow-md ${
         isDragActive
-          ? 'border-primary bg-primary/10' // Enhanced active state
+          ? 'border-primary bg-primary/10'
           : 'border-border hover:border-primary/50'
       } ${isProcessing ? 'pointer-events-none opacity-60' : ''} ${
         error && !error.includes('OpenAI')

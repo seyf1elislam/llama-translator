@@ -14,7 +14,7 @@ import {
 interface ContentPreviewProps {
   title: string;
   content: string;
-  isLoading?: boolean; // Added loading state
+  isLoading?: boolean;
   isTranslation?: boolean;
   isRtl?: boolean;
   onContentChange?: (content: string) => void; // Callback for original content changes

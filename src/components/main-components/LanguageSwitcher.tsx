@@ -8,8 +8,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-// Added Tooltip
-
 import { LanguageSelector } from './lang_selector';
 
 export const LanguageSwitcher = () => {
@@ -25,7 +23,6 @@ export const LanguageSwitcher = () => {
   const isDisabled = isTranslating || isReadingFile;
 
   return (
-    // Responsive layout: stack on small screens, row on larger
     <div className='flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-4'>
       <LanguageSelector
         value={sourceLang}

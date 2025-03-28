@@ -9,7 +9,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-// Consider making this configurable or fetching dynamically if needed
 export const LANG_LIST: string[] = [
   'Auto Detect',
   'Arabic',
@@ -18,7 +17,7 @@ export const LANG_LIST: string[] = [
   'French',
   'German',
   'Chinese',
-  'Japanese', // Added more languages
+  'Japanese',
   'Russian',
   'Portuguese',
   'Italian',
@@ -39,7 +38,6 @@ export const LanguageSelector = ({
 }: LanguageSelectorProps) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
-      {/* Adjusted width for responsiveness */}
       <Button variant='outline' className='w-full justify-start sm:w-[180px]'>
         <Languages className='mr-2 h-4 w-4 flex-shrink-0' />
         <span className='truncate'>{value}</span>

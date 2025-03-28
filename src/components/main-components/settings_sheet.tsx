@@ -33,7 +33,6 @@ const Providers_endpoints = [
 ];
 
 export function SettingsSheet() {
-  // --- START: Refactored State Selection ---
   // Select individual state values
   const openaiBaseUrl = useTranslationStore((state) => state.openaiBaseUrl);
   const openaiToken = useTranslationStore((state) => state.openaiToken);
@@ -51,8 +50,7 @@ export function SettingsSheet() {
   const setTemperature = useTranslationStore((state) => state.setTemperature);
   const setMaxSeq = useTranslationStore((state) => state.setMaxSeq);
   const setError = useTranslationStore((state) => state.setError);
-  // const validateAndSaveSettings = useTranslationStore((state) => state.validateAndSaveSettings); // Only select if needed directly
-  // --- END: Refactored State Selection ---
+
   const [showCustomUrlInput, setshowCustomUrlInput] = useState<boolean>(false);
   useEffect(() => {
     const show_ = !Providers_endpoints.some((p) => p.url === openaiBaseUrl);
@@ -63,7 +61,7 @@ export function SettingsSheet() {
     const isCustom = Boolean(checked);
     setshowCustomUrlInput(isCustom);
     if (!isCustom) {
-      // If user unchecks, revert to the default provider (e.g., OpenAI)
+      //! when user unchecks, revert to the default provider (e.g., OpenAI)
       setOpenaiBaseUrl(Providers_endpoints[0].url);
     }
     // If checking, the input field change handler will update the URL
@@ -72,7 +70,7 @@ export function SettingsSheet() {
 
   const currentProviderName =
     Providers_endpoints.find((p) => p.url === openaiBaseUrl)?.name ??
-    (showCustomUrlInput ? 'Custom' : 'Select Provider'); // Improved logic for display name
+    (showCustomUrlInput ? 'Custom' : 'Select Provider');
 
   return (
     <Sheet>
@@ -168,7 +166,7 @@ export function SettingsSheet() {
               className='col-span-3'
               step='0.1'
               min='0'
-              max='2' // Allow up to 2 based on store validation
+              max='2'
             />
           </div>
 

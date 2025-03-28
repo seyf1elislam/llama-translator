@@ -1,10 +1,7 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-// import { Moon, Sun } from "lucide-react";
 import { GrSystem } from 'react-icons/gr';
-// import { GiNightSky } from "react-icons/gi";
-// import { WiDaySunny } from "react-icons/wi";
 import { IoSunny } from 'react-icons/io5';
 import { MdOutlineNightlight } from 'react-icons/md';
 
@@ -37,7 +34,6 @@ export default function ToggleThemeMode({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div>
-            {/* {use_custom_button && children} */}
             {use_expaned_variant ? (
               <div className='mx-2 flex items-center p-0'>
                 {show_text ? (
@@ -66,16 +62,6 @@ export default function ToggleThemeMode({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          {/* <DropdownMenuItem onClick={() => setTheme("light")}>
-            Light
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme("dark")}>
-            dark
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme("system")}>
-            system
-          </DropdownMenuItem> */}
-
           <DropdownMenuItem
             onClick={() => setTheme('light')}
             className='flex flex-1 items-center justify-between space-x-3'

@@ -4,7 +4,13 @@ import { useTranslationStore } from '@/store/translationStore';
 import { FileText, Loader2, RotateCw, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 import { ContentPreview } from './ContentPreviewCard';
@@ -14,7 +20,6 @@ import { TranslationProgress } from './TranslationProgress';
 import { SettingsSheet } from './settings_sheet';
 
 export function TranslationInterface() {
-  // --- START: Refactored State Selection ---
   // Select individual state slices needed
   const error = useTranslationStore((state) => state.error);
   const isTranslating = useTranslationStore((state) => state.isTranslating);
@@ -31,11 +36,10 @@ export function TranslationInterface() {
   const clearAll = useTranslationStore((state) => state.clearAll);
   const handleTranslate = useTranslationStore((state) => state.handleTranslate);
   const setFileContent = useTranslationStore((state) => state.setFileContent); // For original content editing
-  // --- END: Refactored State Selection ---
 
   const isProcessing = isReadingFile || isTranslating;
-  // Enable translate button if there's content and we're not processing
-  const canTranslate = !!fileContent && !isProcessing;
+  // Enable translate button if there's content and we're not processing and there is no error
+  const canTranslate = !!fileContent && !isProcessing && !error;
   // Always show content areas
   const showContentAreas = true;
 
@@ -48,8 +52,19 @@ export function TranslationInterface() {
               <FileText className='h-5 w-5' />
               <span>Llama Translator</span>
             </div>
+
             <SettingsSheet />
           </CardTitle>
+          <CardDescription>
+            <div className='flex items-center gap-2 text-sm font-normal text-muted-foreground'>
+              <span>
+                Translate Text & documents using any OpenAI-compatible API .
+              </span>
+              {isTranslating && (
+                <Loader2 className='h-4 w-4 animate-spin text-muted-foreground' />
+              )}
+            </div>
+          </CardDescription>
         </CardHeader>
 
         <CardContent className='space-y-6 p-4 sm:p-6'>
