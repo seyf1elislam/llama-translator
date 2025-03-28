@@ -1,5 +1,6 @@
 import { useTranslationStore } from '@/store/translationStore';
 import { Settings } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 import ToggleThemeMode from '@/components/theme-components/toggle_theme_mode';
 import { Button } from '@/components/ui/button';
@@ -52,14 +53,15 @@ export function SettingsSheet() {
   const setError = useTranslationStore((state) => state.setError);
   // const validateAndSaveSettings = useTranslationStore((state) => state.validateAndSaveSettings); // Only select if needed directly
   // --- END: Refactored State Selection ---
-
-  // Calculate showCustomUrlInput directly during render
-  const showCustomUrlInput = !Providers_endpoints.some(
-    (p) => p.url === openaiBaseUrl,
-  );
+  const [showCustomUrlInput, setshowCustomUrlInput] = useState<boolean>(false);
+  useEffect(() => {
+    const show_ = !Providers_endpoints.some((p) => p.url === openaiBaseUrl);
+    setshowCustomUrlInput(show_);
+  }, []);
 
   const handleCustomUrlCheckChange = (checked: boolean | string) => {
     const isCustom = Boolean(checked);
+    setshowCustomUrlInput(isCustom);
     if (!isCustom) {
       // If user unchecks, revert to the default provider (e.g., OpenAI)
       setOpenaiBaseUrl(Providers_endpoints[0].url);
