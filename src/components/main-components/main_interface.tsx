@@ -53,7 +53,8 @@ export function TranslationInterface() {
         </CardHeader>
 
         <CardContent className='space-y-6 p-4 sm:p-6'>
-          {error && !error.includes('OpenAI') && (
+          {/* {error && !error.includes('OpenAI') && ( */}
+          {error && (
             <div
               role='alert'
               className='rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive shadow-sm'
