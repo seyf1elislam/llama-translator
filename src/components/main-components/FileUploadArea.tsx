@@ -1,6 +1,5 @@
 import { useTranslationStore } from '@/store/translationStore';
-import { ArrowUpFromLine, Loader2 } from 'lucide-react';
-// Changed Icon
+import { ArrowUpFromLine, FileText, Loader2 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 
 export const FileUploadArea = () => {
@@ -9,6 +8,7 @@ export const FileUploadArea = () => {
   const isReadingFile = useTranslationStore((state) => state.isReadingFile);
   const isTranslating = useTranslationStore((state) => state.isTranslating);
   const file = useTranslationStore((state) => state.file);
+  const fileContent = useTranslationStore((state) => state.fileContent);
   const error = useTranslationStore((state) => state.error);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -29,6 +29,25 @@ export const FileUploadArea = () => {
   });
 
   const isProcessing = isReadingFile || isTranslating;
+  const hasManualContent = !!fileContent && !file && !isReadingFile;
+
+  let primaryText = 'Drag & drop file, or click to select';
+  if (isDragActive) {
+    primaryText = 'Drop your file here';
+  } else if (hasManualContent) {
+    primaryText = 'Using manually entered text';
+  } else if (file && !isReadingFile) {
+    primaryText = 'File selected:';
+  }
+
+  let secondaryText = 'Supports .txt, .docx, .pdf (Max 10MB)';
+  if (file && !isReadingFile) {
+    secondaryText = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`;
+  } else if (isReadingFile) {
+    secondaryText = 'Reading file...';
+  } else if (hasManualContent) {
+    secondaryText = 'You can drop a file to replace it';
+  }
 
   return (
     <div
@@ -38,35 +57,30 @@ export const FileUploadArea = () => {
           ? 'border-primary bg-primary/10' // Enhanced active state
           : 'border-border hover:border-primary/50'
       } ${isProcessing ? 'pointer-events-none opacity-60' : ''} ${
-        error ? 'border-destructive bg-destructive/10' : '' // Indicate error state
+        error && !error.includes('OpenAI')
+          ? 'border-destructive bg-destructive/10'
+          : '' // Only border red for non-settings errors
       }`}
     >
       <input {...getInputProps()} />
-      <div className='space-y-2'>
+      <div className='space-y-1'>
         {isReadingFile ? (
-          <Loader2 className='mx-auto h-8 w-8 animate-spin text-primary' />
+          <Loader2 className='mx-auto mb-1 h-7 w-7 animate-spin text-primary' />
+        ) : file ? (
+          <FileText className='mx-auto mb-1 h-7 w-7 text-muted-foreground' />
         ) : (
-          <ArrowUpFromLine className='mx-auto h-8 w-8 text-muted-foreground' />
+          <ArrowUpFromLine className='mx-auto mb-1 h-7 w-7 text-muted-foreground' />
         )}
-        <p className='font-medium text-foreground'>
-          {isDragActive
-            ? 'Drop your file here'
-            : 'Drag & drop file, or click to select'}
+        <p
+          className={`font-medium text-foreground ${file && !isReadingFile ? 'text-sm' : ''}`}
+        >
+          {primaryText}
         </p>
-        <p className='text-xs text-muted-foreground'>
-          Supports .txt, .docx, .pdf (Max 10MB)
+        <p
+          className={`text-xs ${isReadingFile ? 'animate-pulse text-primary' : 'text-muted-foreground'}`}
+        >
+          {secondaryText}
         </p>
-        {file && !isReadingFile && (
-          <p className='pt-2 text-sm text-foreground/80'>
-            Selected: <span className='font-medium'>{file.name}</span> (
-            {(file.size / 1024 / 1024).toFixed(2)}MB)
-          </p>
-        )}
-        {isReadingFile && (
-          <p className='animate-pulse pt-2 text-sm text-primary'>
-            Reading file...
-          </p>
-        )}
       </div>
     </div>
   );
