@@ -1,6 +1,3 @@
-// ================================================
-// File: src/store/translationStore.ts (REVISED - Cleaner Async Actions)
-// ================================================
 import { parsePdfFileSSA } from '@/server/parsepdf';
 import { translate } from '@/server/translate';
 import mammoth from 'mammoth';
@@ -76,8 +73,6 @@ export const useTranslationStore = create<
     (set, get) => ({
       ...initialState,
 
-      // --- Actions (Refined Async Handling) ---
-
       setFile: (file) => {
         // Reset state *before* starting async operation
         set({
@@ -131,8 +126,6 @@ export const useTranslationStore = create<
           readFileAsync(file);
         }
       },
-
-      // readFileContent is now internal to setFile
 
       setFileContent: (content) => {
         set({
@@ -343,11 +336,9 @@ export const useTranslationStore = create<
         sourceLang: state.sourceLang,
         targetLang: state.targetLang,
       }),
-      // Skip hydration errors during SSR/initial client render
-      // This tells Zustand to wait until rehydration is complete before applying persisted state
-      // Note: This might cause a brief flicker on load as the default state switches to persisted state.
-      // The client mount guard in page.tsx is often still preferred for a smoother experience.
-      // skipHydration: true, // You might try uncommenting this if the client guard isn't enough
+      //? Skip hydration errors during SSR/initial client render  This tells Zustand to wait until rehydration is complete before applying persisted state
+      //?im handling the mount condition in the page.tsx .
+      //? skipHydration: true, // You might try uncommenting this if the client guard isn't enough
     },
   ),
 );

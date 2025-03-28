@@ -93,7 +93,7 @@ export async function translate(formData: FormData): Promise<{
     const openai = new OpenAI({
       apiKey: openaiToken,
       baseURL: openaiBaseUrl,
-      dangerouslyAllowBrowser: true, // Acknowledge browser usage risk
+      dangerouslyAllowBrowser: true,
     });
 
     // Split text into manageable chunks
@@ -107,7 +107,7 @@ export async function translate(formData: FormData): Promise<{
       const translatedChunk = await translateText(
         openai,
         chunk,
-        sourceLang, // 'auto' is handled here
+        sourceLang,
         targetLang,
         openaiConfig,
       );
@@ -142,8 +142,7 @@ export async function translate(formData: FormData): Promise<{
   }
 }
 
-// Keep chunking and translateText functions as they are, or refine chunking
-function splitTextIntoChunks(text: string, maxChunkSize = 3000): string[] {
+function splitTextIntoChunks(text: string, maxChunkSize = 32000): string[] {
   // Simple split by length, respecting newlines where possible
   const chunks: string[] = [];
   let remainingText = text;
