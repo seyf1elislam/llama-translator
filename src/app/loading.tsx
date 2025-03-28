@@ -1,16 +1,6 @@
-'use client';
-
-// Required for useState and useEffect
-import { useEffect, useState } from 'react';
-
-import { TranslationInterface } from '@/components/main-components/main_interface';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-// For skeleton
 import { Skeleton } from '@/components/ui/skeleton';
 
-// For skeleton
-
-// Skeleton component to match the card structure during loading/SSR
 const InterfaceSkeleton = () => (
   <Card className='mx-auto w-full max-w-4xl rounded-xl bg-card/90 shadow-lg backdrop-blur supports-[backdrop-filter]:bg-card/80'>
     <CardHeader className='border-b border-border/70 pb-4'>
@@ -35,19 +25,4 @@ const InterfaceSkeleton = () => (
   </Card>
 );
 
-export default function ConditionPlaceholder() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    // This effect runs only on the client, after the initial render
-    setIsClient(true);
-  }, []);
-  return (
-    // <div className='flex min-h-dvh w-full flex-col items-center justify-center bg-gradient-to-br from-background to-secondary/30 px-2 py-4 md:py-8'>
-    //   {/* Conditionally render the component only on the client */}
-    //   {/* <TooltipProvider> */}
-    <>{isClient ? <TranslationInterface /> : <InterfaceSkeleton />}</>
-    //   {/* </TooltipProvider> */}
-    // {/* </div> */}
-  );
-}
+export default InterfaceSkeleton;
