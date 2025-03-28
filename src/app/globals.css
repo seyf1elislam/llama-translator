@@ -77,7 +77,239 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+/* ---------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+*/
+@layer base {
+  /* Teal Light Theme */
+  :root {
+    /* Neutrals */
+    --background: 0 0% 100%; /* White */
+    --foreground: 210 10% 23%; /* Dark Gray */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 210 10% 23%; /* Dark Gray */
+    --popover: 0 0% 100%; /* White */
+    --popover-foreground: 210 10% 23%; /* Dark Gray */
+    --muted: 210 40% 96.1%; /* Light Gray */
+    --muted-foreground: 215 15% 45%; /* Medium Gray */
+    --border: 175 15% 91%; /* Very Light Subtle Teal/Gray */
+    --input: 175 15% 91%; /* Very Light Subtle Teal/Gray */
 
+    /* Primary (Teal) */
+    --primary: 175 60% 35%; /* Dark Teal */
+    --primary-foreground: 180 15% 98%; /* Off-White/Very Light Cyan */
+
+    /* Secondary (Light Teal) */
+    --secondary: 175 30% 96%; /* Very Light Teal */
+    --secondary-foreground: 175 60% 35%; /* Dark Teal */
+
+    /* Accent (Light Teal) */
+    --accent: 175 30% 96%; /* Very Light Teal */
+    --accent-foreground: 175 60% 35%; /* Dark Teal */
+
+    /* Destructive (Red) */
+    --destructive: 0 84.2% 60.2%; /* Red */
+    --destructive-foreground: 210 40% 98%; /* Off-White */
+
+    /* Ring (Focus Indicator - Teal) */
+    --ring: 175 70% 45%; /* Bright Teal */
+
+    /* Charts */
+    --chart-1: 175 70% 50%; /* Mid Teal */
+    --chart-2: 173 60% 40%; /* Dark Teal-Green */
+    --chart-3: 185 40% 30%; /* Darker Teal/Blue */
+    --chart-4: 43 74% 66%; /* Gold */
+    --chart-5: 27 87% 67%; /* Orange */
+
+    /* Radius */
+    --radius: 0.5rem;
+
+    /* Sidebar (Light) */
+    --sidebar-background: 175 10% 98%; /* Very Light Subtle Teal */
+    --sidebar-foreground: 210 10% 23%; /* Dark Gray */
+    --sidebar-primary: 175 60% 35%; /* Dark Teal */
+    --sidebar-primary-foreground: 180 15% 98%; /* Off-White/Very Light Cyan */
+    --sidebar-accent: 175 30% 96%; /* Very Light Teal */
+    --sidebar-accent-foreground: 175 60% 35%; /* Dark Teal */
+    --sidebar-border: 175 15% 91%; /* Very Light Subtle Teal/Gray */
+    --sidebar-ring: 175 70% 45%; /* Bright Teal */
+  }
+
+  /* Teal Dark Theme */
+  .dark {
+    /* Neutrals */
+    --background: 175 15% 8%; /* Very Dark Desaturated Teal */
+    --foreground: 180 10% 98%; /* Off-White/Very Light Cyan */
+    --card: 175 15% 8%; /* Very Dark Desaturated Teal */
+    --card-foreground: 180 10% 98%; /* Off-White/Very Light Cyan */
+    --popover: 175 15% 8%; /* Very Dark Desaturated Teal */
+    --popover-foreground: 180 10% 98%; /* Off-White/Very Light Cyan */
+    --muted: 175 20% 18%; /* Dark Desaturated Teal */
+    --muted-foreground: 215 15% 65%; /* Medium Gray */
+    --border: 175 20% 22%; /* Dark Teal/Gray */
+    --input: 175 20% 22%; /* Dark Teal/Gray */
+
+    /* Primary (Teal) */
+    --primary: 175 70% 65%; /* Bright Teal */
+    --primary-foreground: 175 25% 15%; /* Very Dark Teal */
+
+    /* Secondary (Dark Teal) */
+    --secondary: 175 20% 18%; /* Dark Desaturated Teal */
+    --secondary-foreground: 180 10% 98%; /* Off-White/Very Light Cyan */
+
+    /* Accent (Dark Teal) */
+    --accent: 175 20% 18%; /* Dark Desaturated Teal */
+    --accent-foreground: 180 10% 98%; /* Off-White/Very Light Cyan */
+
+    /* Destructive (Red) */
+    --destructive: 0 70% 55%; /* Brighter Red for Dark Mode */
+    --destructive-foreground: 210 40% 98%; /* Off-White */
+
+    /* Ring (Focus Indicator - Teal) */
+    --ring: 175 70% 55%; /* Bright Teal */
+
+    /* Charts */
+    --chart-1: 175 75% 60%; /* Bright Teal */
+    --chart-2: 165 65% 50%; /* Teal-Green */
+    --chart-3: 270 60% 65%; /* Purple */
+    --chart-4: 45 80% 60%; /* Yellow/Gold */
+    --chart-5: 340 75% 55%; /* Pink/Red */
+
+    /* Sidebar (Dark) */
+    --sidebar-background: 175 15% 8%; /* Very Dark Desaturated Teal */
+    --sidebar-foreground: 180 10% 98%; /* Off-White/Very Light Cyan */
+    --sidebar-primary: 175 70% 65%; /* Bright Teal */
+    --sidebar-primary-foreground: 175 25% 15%; /* Very Dark Teal */
+    --sidebar-accent: 175 20% 18%; /* Dark Desaturated Teal */
+    --sidebar-accent-foreground: 180 10% 98%; /* Off-White/Very Light Cyan */
+    --sidebar-border: 175 20% 22%; /* Dark Teal/Gray */
+    --sidebar-ring: 175 70% 55%; /* Bright Teal */
+  }
+}
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+@layer base {
+  /* Blue Light Theme */
+  :root {
+    /* Neutrals */
+    --background: 0 0% 100%; /* White */
+    --foreground: 215 20% 25%; /* Dark Gray */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 215 20% 25%; /* Dark Gray */
+    --popover: 0 0% 100%; /* White */
+    --popover-foreground: 215 20% 25%; /* Dark Gray */
+    --muted: 210 40% 96.1%; /* Light Gray */
+    --muted-foreground: 215 15% 45%; /* Medium Gray */
+    --border: 225 25% 91%; /* Very Light Subtle Blue/Gray */
+    --input: 225 25% 91%; /* Very Light Subtle Blue/Gray */
+
+    /* Primary (Blue) */
+    --primary: 225 70% 45%; /* Medium-Dark Blue */
+    --primary-foreground: 210 40% 98%; /* Off-White */
+
+    /* Secondary (Light Blue) */
+    --secondary: 225 50% 96%; /* Very Light Blue */
+    --secondary-foreground: 225 70% 45%; /* Medium-Dark Blue */
+
+    /* Accent (Light Blue) */
+    --accent: 225 50% 96%; /* Very Light Blue */
+    --accent-foreground: 225 70% 45%; /* Medium-Dark Blue */
+
+    /* Destructive (Red) */
+    --destructive: 0 84.2% 60.2%; /* Red */
+    --destructive-foreground: 210 40% 98%; /* Off-White */
+
+    /* Ring (Focus Indicator - Blue) */
+    --ring: 225 80% 55%; /* Bright Blue */
+
+    /* Charts */
+    --chart-1: 225 70% 60%; /* Mid Blue */
+    --chart-2: 210 65% 55%; /* Sky Blue */
+    --chart-3: 240 50% 40%; /* Indigo/Darker Blue */
+    --chart-4: 170 60% 45%; /* Teal */
+    --chart-5: 350 75% 60%; /* Pink */
+
+    /* Radius */
+    --radius: 0.5rem;
+
+    /* Sidebar (Light) */
+    --sidebar-background: 225 15% 98%; /* Very Light Subtle Blue */
+    --sidebar-foreground: 215 20% 25%; /* Dark Gray */
+    --sidebar-primary: 225 70% 45%; /* Medium-Dark Blue */
+    --sidebar-primary-foreground: 210 40% 98%; /* Off-White */
+    --sidebar-accent: 225 50% 96%; /* Very Light Blue */
+    --sidebar-accent-foreground: 225 70% 45%; /* Medium-Dark Blue */
+    --sidebar-border: 225 25% 91%; /* Very Light Subtle Blue/Gray */
+    --sidebar-ring: 225 80% 55%; /* Bright Blue */
+  }
+
+  /* Blue Dark Theme */
+  .dark {
+    /* Neutrals */
+    --background: 225 20% 8%; /* Very Dark Desaturated Blue */
+    --foreground: 210 40% 98%; /* Off-White */
+    --card: 225 20% 8%; /* Very Dark Desaturated Blue */
+    --card-foreground: 210 40% 98%; /* Off-White */
+    --popover: 225 20% 8%; /* Very Dark Desaturated Blue */
+    --popover-foreground: 210 40% 98%; /* Off-White */
+    --muted: 225 25% 18%; /* Dark Desaturated Blue */
+    --muted-foreground: 215 15% 65%; /* Medium Gray */
+    --border: 225 25% 22%; /* Dark Blue/Gray */
+    --input: 225 25% 22%; /* Dark Blue/Gray */
+
+    /* Primary (Blue) */
+    --primary: 225 80% 75%; /* Bright Light Blue */
+    --primary-foreground: 225 50% 15%; /* Very Dark Blue */
+
+    /* Secondary (Dark Blue/Gray) */
+    --secondary: 225 25% 18%; /* Dark Desaturated Blue */
+    --secondary-foreground: 210 40% 98%; /* Off-White */
+
+    /* Accent (Dark Blue/Gray) */
+    --accent: 225 25% 18%; /* Dark Desaturated Blue */
+    --accent-foreground: 210 40% 98%; /* Off-White */
+
+    /* Destructive (Red) */
+    --destructive: 0 70% 55%; /* Brighter Red for Dark Mode */
+    --destructive-foreground: 210 40% 98%; /* Off-White */
+
+    /* Ring (Focus Indicator - Blue) */
+    --ring: 225 80% 55%; /* Bright Blue */
+
+    /* Charts */
+    --chart-1: 225 75% 70%; /* Bright Blue */
+    --chart-2: 210 70% 65%; /* Bright Sky Blue */
+    --chart-3: 240 60% 60%; /* Indigo/Purple */
+    --chart-4: 170 70% 50%; /* Bright Teal */
+    --chart-5: 350 80% 65%; /* Bright Pink */
+
+    /* Sidebar (Dark) */
+    --sidebar-background: 225 20% 8%; /* Very Dark Desaturated Blue */
+    --sidebar-foreground: 210 40% 98%; /* Off-White */
+    --sidebar-primary: 225 80% 75%; /* Bright Light Blue */
+    --sidebar-primary-foreground: 225 50% 15%; /* Very Dark Blue */
+    --sidebar-accent: 225 25% 18%; /* Dark Desaturated Blue */
+    --sidebar-accent-foreground: 210 40% 98%; /* Off-White */
+    --sidebar-border: 225 25% 22%; /* Dark Blue/Gray */
+    --sidebar-ring: 225 80% 55%; /* Bright Blue */
+  }
+}
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
+/* -------------------------------------------------------------- */
 @layer base {
   * {
     @apply border-border;
