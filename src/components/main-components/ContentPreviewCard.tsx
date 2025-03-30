@@ -1,6 +1,8 @@
+import copy from 'copy-to-clipboard';
 import { Check, Clipboard, Download } from 'lucide-react';
 import { useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+
+// import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -33,8 +35,13 @@ export const ContentPreview = ({
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500); // Reset icon after 1.5s
+    try {
+      copy(content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500); // Reset icon after 1.5s
+    } catch (error) {
+      console.error('Failed to copy text:', error);
+    }
   };
 
   const handleDownload = () => {
@@ -79,15 +86,20 @@ export const ContentPreview = ({
             <>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <CopyToClipboard text={content} onCopy={handleCopy}>
-                    <Button variant='ghost' size='icon' className='h-7 w-7'>
-                      {copied ? (
-                        <Check className='h-4 w-4 text-green-500' />
-                      ) : (
-                        <Clipboard className='h-4 w-4' />
-                      )}
-                    </Button>
-                  </CopyToClipboard>
+                  {/* <CopyToClipboard text={content} onCopy={handleCopy}>
+                  </CopyToClipboard> */}
+                  <Button
+                    variant='ghost'
+                    size='icon'
+                    className='h-7 w-7'
+                    onClick={handleCopy}
+                  >
+                    {copied ? (
+                      <Check className='h-4 w-4 text-green-500' />
+                    ) : (
+                      <Clipboard className='h-4 w-4' />
+                    )}
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>{copied ? 'Copied!' : 'Copy to Clipboard'}</p>
